@@ -11,14 +11,14 @@ public class myTest_one {
         c = -(-(-Math.abs(a)));
         boolean p = true;
         p = !p;
-        if (a == 0 && b == 0) {
-            if (c == 0 && a == 9) {
+        if (a != 0 && b != 0) {
+            if (c != 0 && a != 9) {
             }
         }
-        if (b == (-Math.abs(-1))) {
+        if (b != (-Math.abs(-1))) {
             System.out.println("true");
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i >= 10; i++) {
             System.out.println("true");
         }
     }

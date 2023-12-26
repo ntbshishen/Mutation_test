@@ -5,14 +5,17 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.example.demo.util.Mutation_enum;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Visitor {
     private final Map<String,VoidVisitorAdapter<Void>> map=new HashMap<>();
+    public Visitor(){
 
-    Visitor(){
+
+    }
+    public VoidVisitorAdapter<Void> getVisitor(String name,int count){
         ABSVisitor absVisitor = new ABSVisitor();
         map.put(Mutation_enum.ABS.name(), absVisitor);
         AORVisitor aorVisitor = new AORVisitor();
@@ -23,14 +26,12 @@ public class Visitor {
         map.put(Mutation_enum.ROR.name(), rorVisitor);
         UOIVisitor uoiVisitor = new UOIVisitor();
         map.put(Mutation_enum.UOI.name(), uoiVisitor);
-    }
-    public VoidVisitorAdapter<Void> getVisitor(String name){
-        System.out.println(this.map);
         return this.map.get(name);
-
     }
+
     // ABSVisitor
-    private static  class ABSVisitor extends VoidVisitorAdapter<Void> {
+    public static  class ABSVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
         @Override
         public void visit(MethodCallExpr methodCall, Void arg){
             super.visit(methodCall, arg);
@@ -38,13 +39,33 @@ public class Visitor {
             if (methodCall.getName().getIdentifier().equals("abs") &&
                     methodCall.getScope().isPresent() &&
                     methodCall.getScope().get().toString().equals("Math")) {
-                NameExpr negationExpr = new NameExpr("(-"+methodCall+")");
-                methodCall.getParentNode().ifPresent(parent -> parent.replace(methodCall, negationExpr));
-                System.out.println("Method Call: " + methodCall);
+                if(number==0){
+                    NameExpr negationExpr = new NameExpr("(-"+methodCall+")");
+                    methodCall.getParentNode().ifPresent(parent -> parent.replace(methodCall, negationExpr));
+                    System.out.println("Method Call: " + methodCall);
+                }
+                number++;
             }
         }
     }
+    // ABSPreVisitor
+    public static  class ABSPreVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
+        @Override
+        public void visit(MethodCallExpr methodCall, Void arg) {
+            super.visit(methodCall, arg);
+            if (methodCall.getName().getIdentifier().equals("abs") &&
+                    methodCall.getScope().isPresent() &&
+                    methodCall.getScope().get().toString().equals("Math")) {
+                number++;
+                System.out.println("Method Call: " + methodCall);
 
+            }
+        }
+        public int getNumber(){
+            return this.number;
+        }
+    }
     //AORVisitor
     private static class AORVisitor extends VoidVisitorAdapter<Void> {
         @Override
@@ -86,6 +107,29 @@ public class Visitor {
             return operator;
         }
     }
+    // AORPreVisitor
+    public static class AORPreVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
+        @Override
+        public void visit(BinaryExpr binaryExpr, Void arg) {
+            super.visit(binaryExpr, arg);
+
+            // 检查是否为算术运算符表达式
+            if (isArithmeticOperator(binaryExpr.getOperator())) {
+                number++;
+            }
+        }
+        private boolean isArithmeticOperator(BinaryExpr.Operator operator) {
+            return operator.equals(BinaryExpr.Operator.PLUS) ||
+                    operator.equals(BinaryExpr.Operator.MINUS) ||
+                    operator.equals(BinaryExpr.Operator.MULTIPLY) ||
+                    operator.equals(BinaryExpr.Operator.DIVIDE) ||
+                    operator.equals(BinaryExpr.Operator.REMAINDER);
+        }
+        public int getNumber(){
+            return this.number;
+        }
+    }
     //LCRVisitor
     private static class LCRVisitor extends VoidVisitorAdapter<Void> {
         @Override
@@ -118,6 +162,27 @@ public class Visitor {
             return operator;
         }
     }
+    // LCRPreVisitor
+    public static class LCRPreVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
+        @Override
+        public void visit(BinaryExpr binaryExpr, Void arg) {
+            super.visit(binaryExpr, arg);
+
+            if (isLogicalConnector(binaryExpr.getOperator())) {
+                number++;
+            }
+        }
+        // 检查是否为逻辑连接词
+        private boolean isLogicalConnector(BinaryExpr.Operator operator) {
+            return operator.equals(BinaryExpr.Operator.AND) ||
+                    operator.equals(BinaryExpr.Operator.OR);
+        }
+
+        public int getNumber(){
+            return this.number;
+        }
+    }
     // RORVisitor
     private static class RORVisitor extends VoidVisitorAdapter<Void> {
         @Override
@@ -128,6 +193,7 @@ public class Visitor {
             if (isRelationalOperator(binaryExpr.getOperator())) {
                 // 进行关系运算符替换
                 BinaryExpr.Operator newOperator = getReplacementOperator(binaryExpr.getOperator());
+
                 binaryExpr.setOperator(newOperator);
             }
         }
@@ -160,6 +226,34 @@ public class Visitor {
             }
 
             return operator;
+        }
+    }
+    //
+    // RORVisitor
+    public static class RORPreVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
+        @Override
+        public void visit(BinaryExpr binaryExpr, Void arg) {
+            super.visit(binaryExpr, arg);
+
+            // 检查是否为关系运算符表达式
+            if (isRelationalOperator(binaryExpr.getOperator())) {
+                // 进行关系运算符替换
+                number++;
+            }
+        }
+
+        // 检查是否为关系运算符
+        private boolean isRelationalOperator(BinaryExpr.Operator operator) {
+            return operator.equals(BinaryExpr.Operator.EQUALS) ||
+                    operator.equals(BinaryExpr.Operator.NOT_EQUALS) ||
+                    operator.equals(BinaryExpr.Operator.LESS) ||
+                    operator.equals(BinaryExpr.Operator.LESS_EQUALS) ||
+                    operator.equals(BinaryExpr.Operator.GREATER) ||
+                    operator.equals(BinaryExpr.Operator.GREATER_EQUALS);
+        }
+        public int getNumber(){
+            return this.number;
         }
     }
 
@@ -197,6 +291,28 @@ public class Visitor {
             }
 
             return operator;
+        }
+    }
+
+    public static class UOIPreVisitor extends VoidVisitorAdapter<Void> {
+        private int number=0;
+        @Override
+        public void visit(UnaryExpr unaryExpr, Void arg) {
+            super.visit(unaryExpr, arg);
+            if (isUnaryOperator(unaryExpr.getOperator())) {
+                number++;
+            }
+        }
+
+        // 检查是否为一元运算符
+        private boolean isUnaryOperator(UnaryExpr.Operator operator) {
+            // 这里只列举了一些常见的一元运算符作为示例
+            return operator.equals(UnaryExpr.Operator.POSTFIX_INCREMENT) ||
+                    operator.equals(UnaryExpr.Operator.PREFIX_INCREMENT) ||
+                    operator.equals(UnaryExpr.Operator.LOGICAL_COMPLEMENT);
+        }
+        public int getNumber(){
+            return number;
         }
     }
 }
