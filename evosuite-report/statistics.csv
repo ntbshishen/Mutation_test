@@ -1,0 +1,16 @@
+TARGET_CLASS,criterion,Coverage,Total_Goals,Covered_Goals
+com.example.demo.MyTest.Test_two,BRANCH,0.9166666666666666,30,28
+com.example.demo.MyTest.me,BRANCH,0.7608415233415233,73,38
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.me,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.meOne,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.meOne,BRANCH,0.7590108775811208,163,94
+com.example.demo.MyTest.meOne,BRANCH,0.7668233775811208,163,95
+com.example.demo.MyTest.meOne,BRANCH,0.7590108775811208,163,94
