@@ -50,7 +50,7 @@ public class MutationOperator {
             String classes="com.example.demo.MyTest."+JavaName;
             // 调用Evosuite生成测试用例,生成两个
             EvoSuite evosuite = new EvoSuite();
-            String[] command = { "-generateSuite", "-class", classes, "-projectCP", "target/classes", "-Dtest_dir", "src/test/evosuite" };
+           String[] command = { "-generateSuite", "-class", classes, "-projectCP", "target/classes", "-Dtest_dir", "src/test/evosuite" };
             evosuite.parseCommandLine(command);
             //evosuite.
             // 获取运行环境
