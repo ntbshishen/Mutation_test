@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.response.ResultResponse;
 import com.example.demo.server.MutationOperator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,16 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/Upload")
 @CrossOrigin
 public class UploadController {
-    private final MutationOperator mutationOperator;
-    UploadController(MutationOperator mutationOperator){
+    private final MutationOperator mutationOperator= new MutationOperator();
 
-        this.mutationOperator = mutationOperator;
-    }
     @PostMapping("/UpJava")
-    public void UploadJava(@RequestParam MultipartFile file, @RequestParam String type){
+    public ResultResponse UploadJava(@RequestParam MultipartFile file, @RequestParam String type){
         //log.info("Mutation type: "+type);
         //log.info("JavaFile name: "+file.getOriginalFilename());
-        mutationOperator.ResolveJavaFile(file,type);
+        return mutationOperator.ResolveJavaFile(file,type);
     }
 
 }
